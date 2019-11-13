@@ -27,6 +27,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -49,6 +50,48 @@ public class ServerStatusControllerTests {
         this.mockMvc.perform(get("/server/status").param("name", "RebYid"))
                 .andDo(print()).andExpect(status().isOk())
                 .andExpect(jsonPath("$.contentHeader").value("Server Status requested by RebYid"));
+    }
+
+    @Test
+    public void detailedStatusRequestShouldThrowErrorWhenDetailListIsNull() throws Exception {
+
+        this.mockMvc.perform(get("/server/status/detailed")).andDo(print())
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    public void detailedStatusReportShouldThrowErrorWhenBadDataPassedIn() throws Exception {
+
+        this.mockMvc.perform(get("/server/status/detailed")
+                .param("details", "operations,FOOBAR")).andDo(print())
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    public void detailedStatusRequestShouldReturnGoodMessageWithGoodData() throws Exception {
+        this.mockMvc.perform(get("/server/status/detailed").param("details", "operations"))
+                .andDo(print()).andExpect(status().isOk())
+                .andExpect(jsonPath("$.statusDesc")
+                        .value("Server is up, and is operating normally"));
+    }
+
+    @Test
+    public void detailedStatusRequestCanBeMadeWithDetailsInAnyOrder() throws Exception {
+        this.mockMvc.perform(get("/server/status/detailed")
+                .param("details", "operations,extensions,memory"))
+                .andDo(print()).andExpect(status().isOk());
+
+        this.mockMvc.perform(get("/server/status/detailed")
+                .param("details", "memory,operations,extensions"))
+                .andDo(print()).andExpect(status().isOk());
+
+    }
+
+    @Test
+    public void detailedStatusRequestCanBeMadeWithDuplicateDetailValues() throws Exception{
+        this.mockMvc.perform(get("/server/status/detailed")
+                .param("details", "operations,operations,operations,operations"))
+                .andDo(print()).andExpect(status().isOk());
     }
 
 }
