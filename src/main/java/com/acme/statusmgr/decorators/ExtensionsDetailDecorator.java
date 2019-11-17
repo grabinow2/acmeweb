@@ -1,4 +1,4 @@
-package statusmgr.decorators;
+package com.acme.statusmgr.decorators;
 
 /**
  * @author
