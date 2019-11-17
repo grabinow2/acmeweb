@@ -1,6 +1,6 @@
-package servermgr;
+package com.acme.servermgr;
 
-import statusmgr.decorators.StatusReporterComponent;
+import com.acme.statusmgr.decorators.StatusReporterComponent;
 
 /**
  * Manage all servers (service providers) being tracked by the Acme server tracking system

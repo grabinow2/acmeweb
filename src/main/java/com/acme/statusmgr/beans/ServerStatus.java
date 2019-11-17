@@ -1,11 +1,11 @@
-package statusmgr.beans;
+package com.acme.statusmgr.beans;
 
-import servermgr.ServerManager;
-import statusmgr.BadRequestException;
-import statusmgr.decorators.StatusReporterComponent;
-import statusmgr.decorators.ExtensionsDetailDecorator;
-import statusmgr.decorators.MemoryDetailDecorator;
-import statusmgr.decorators.OperationsDetailDecorator;
+import com.acme.servermgr.ServerManager;
+import com.acme.statusmgr.BadRequestException;
+import com.acme.statusmgr.decorators.StatusReporterComponent;
+import com.acme.statusmgr.decorators.ExtensionsDetailDecorator;
+import com.acme.statusmgr.decorators.MemoryDetailDecorator;
+import com.acme.statusmgr.decorators.OperationsDetailDecorator;
 
 import java.util.List;
 
@@ -78,11 +78,7 @@ public class ServerStatus {
         return id;
     }
 
-    public String getContentHeader() {
-
-        return contentHeader;
-    }
-
+    public String getContentHeader() { return contentHeader; }
 
     public String getStatusDesc() {
         return statusDesc;
