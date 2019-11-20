@@ -1,23 +1,26 @@
 package statusmgr.decorators;
 
+import servermgr.ServerManager;
+import statusmgr.beans.ServerStatus;
+
 /**
  * @author
  * @version
  *
- * Decorator for StatusReporterComponents that add the details of the server's operations to the status report.
- *
- * Currently implemented with concrete strings, but future versions will have appropriate method(s) to handle this
- * correctly.
+ * Decorator for <code>ServerStatus.getStatusDesc()</code> that add the details of the server's operations to
+ * the status report.
  */
-public class OperationsDetailDecorator extends StatusReporterDecorator {
+public class OperationsDetailDecorator extends ServerStatus {
 
-    public OperationsDetailDecorator(StatusReporterComponent componentToBeDecorated) {
-        super(componentToBeDecorated);
+    private final ServerStatus baseComp;
+
+    public OperationsDetailDecorator(long id, String contentHeader, ServerStatus baseComp) {
+        super(id, contentHeader);
+        this.baseComp = baseComp;
     }
 
     @Override
-    public String getCurrentServerStatus(){
-        return super.getCurrentServerStatus() + ", and is operating normally";
+    public String getStatusDesc() {
+        return baseComp.getStatusDesc() + ", and " + ServerManager.getIsOperatingNormally();
     }
-
 }

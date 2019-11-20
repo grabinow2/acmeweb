@@ -4,10 +4,16 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.springframework.web.bind.annotation.RequestMethod;
+import servermgr.ServerManager;
 import statusmgr.beans.ServerStatus;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import statusmgr.beans.StatusResponse;
+import statusmgr.decorators.BasicStatusReport;
+import statusmgr.decorators.ExtensionsDetailDecorator;
+import statusmgr.decorators.MemoryDetailDecorator;
+import statusmgr.decorators.OperationsDetailDecorator;
 
 /**
  * Controller for all web/REST requests about the status of servers
@@ -39,10 +45,14 @@ public class StatusController {
      * @return a <code>ServerStatus</code> object that creates a greeting message in a browser
      */
     @RequestMapping(value = "/status", method = RequestMethod.GET)
-    public ServerStatus statusRequestHandler(@RequestParam(value="name", defaultValue="Anonymous") String name)
+    public StatusResponse statusRequestHandler(@RequestParam(value="name", defaultValue="Anonymous") String name)
     {
-        return new ServerStatus(counter.incrementAndGet(),
-                String.format(template, name));
+        return new ServerStatus(counter.incrementAndGet(), String.format(template, name)) {
+            @Override
+            public String getStatusDesc() {
+                return ServerManager.getCurrentServerStatus();
+            }
+        };
     }
 
     /**
@@ -70,7 +80,7 @@ public class StatusController {
      * @throws BadRequestException
      */
     @RequestMapping(value = "/status/detailed", method = RequestMethod.GET)
-    public ServerStatus detailedRequestHandler(
+    public StatusResponse detailedRequestHandler(
             @RequestParam(value = "details") List<String> details,
             @RequestParam(value = "name", required = false, defaultValue = "Anonymous") String name)
             throws BadRequestException
@@ -79,7 +89,38 @@ public class StatusController {
             throw new BadRequestException(
                     "\"Required List parameter 'details' is not present\",\"path\":\"/server/status/detailed\"");
 
-        return new ServerStatus(counter.incrementAndGet(), String.format(template,name), details);
+        long longid = counter.incrementAndGet();
+        String header = String.format(template, name);
+
+        return new ServerStatus(longid, header) {
+            @Override
+            public String getStatusDesc() {
+                ServerStatus baseComp = new BasicStatusReport(longid, header);
+
+                for (String s : details)
+                {
+                    if (s.equalsIgnoreCase("operations"))
+                        baseComp = new OperationsDetailDecorator(longid, header, baseComp);
+
+                    else if (s.equalsIgnoreCase("memory"))
+                        baseComp = new MemoryDetailDecorator(longid, header, baseComp);
+
+                    else if (s.equalsIgnoreCase("extensions"))
+                        baseComp = new ExtensionsDetailDecorator(longid, header, baseComp);
+
+                    else
+                        try {
+                            throw new BadRequestException("Invalid details option: " + s);
+                        } catch (BadRequestException e) {
+                            e.printStackTrace();
+                        }
+                }
+
+                this.statusDesc = baseComp.getStatusDesc();
+
+                return statusDesc;
+            }
+        };
 
     }
 
