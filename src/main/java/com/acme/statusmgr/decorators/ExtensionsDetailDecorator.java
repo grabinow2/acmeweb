@@ -1,24 +1,26 @@
 package com.acme.statusmgr.decorators;
 
+import servermgr.ServerManager;
+import statusmgr.beans.ServerStatus;
+
 /**
  * @author
  * @version
  *
- * Decorator for StatusReporterComponents that add the details of the extensions in use by the server
+ * Decorator for <code>ServerStatus.getStatusDesc()</code>that add the details of the extensions in use by the server
  * to the status report.
- *
- * Currently implemented with concrete strings, but future versions will have appropriate method(s) to handle this
- * correctly.
  */
-public class ExtensionsDetailDecorator extends StatusReporterDecorator {
+public class ExtensionsDetailDecorator extends ServerStatus {
 
-    public ExtensionsDetailDecorator(StatusReporterComponent component){
-        super(component);
+    private final ServerStatus baseComp;
+
+    public ExtensionsDetailDecorator(long id, String contentHeader, ServerStatus baseComp) {
+        super(id, contentHeader);
+        this.baseComp = baseComp;
     }
 
     @Override
-    public String getCurrentServerStatus(){
-        return super.getCurrentServerStatus() + ", and is using these extensions - [Hypervisor, Kubernetes, RAID-6]";
+    public String getStatusDesc() {
+        return baseComp.getStatusDesc() + ", and is using these extensions - " + ServerManager.getExtensions();
     }
-
 }
