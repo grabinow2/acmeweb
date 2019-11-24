@@ -1,4 +1,8 @@
-package servermgr;
+package com.acme.servermgr;
+
+import com.acme.servermgr.IMonitorableServer;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * @author
@@ -7,15 +11,20 @@ package servermgr;
  * Manage all servers (service providers) being tracked by the Acme server tracking system
  * For now just some simple static methods for use in school project
  */
+@Component
 public class ServerManager {
+
+    @Autowired
+    private IMonitorableServer monitor;
 
     /**
      * Get the status of this server
      *
      * @return a descriptive string about the servers status
      */
-    static public String getCurrentServerStatus() {
-        return "Server is up";
+    public String getCurrentServerStatus() {
+        String status = monitor.getCurrentServerStatus();
+        return status;
     }
 
     /**

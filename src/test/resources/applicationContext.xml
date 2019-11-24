@@ -20,7 +20,7 @@
 
     <!-- For TEST execution use the FAKE monitor that returns static responses -->
 
-    <!-- <bean id="monitor"    class="com.acme.servermgr.FakeMonitor"></bean> -->
+    <bean id="monitor"    class="com.acme.servermgr.FakeMonitor"></bean>
 
 
 

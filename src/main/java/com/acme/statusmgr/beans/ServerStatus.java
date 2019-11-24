@@ -1,8 +1,7 @@
-package statusmgr.beans;
+package com.acme.statusmgr.beans;
 
-import statusmgr.BadRequestException;
-
-import java.util.List;
+import com.acme.Application;
+import com.acme.servermgr.ServerManager;
 
 /**
  * @author
@@ -16,6 +15,8 @@ public abstract class ServerStatus implements StatusResponse {
     protected String contentHeader;
     public String statusDesc;
 
+    protected ServerManager serverManager;
+
     /**
      * Construct a ServerStatus using info passed in for identification, and obtaining current
      * server status from the appropriate Manager class.
@@ -26,6 +27,8 @@ public abstract class ServerStatus implements StatusResponse {
     public ServerStatus(long id, String contentHeader) {
         this.id = id;
         this.contentHeader = contentHeader;
+
+        serverManager = (ServerManager) Application.getApplicationContext().getBean("serverManager");
     }
 
     public long getId() {
@@ -36,7 +39,7 @@ public abstract class ServerStatus implements StatusResponse {
         return contentHeader;
     }
 
-    public abstract String getStatusDesc();
+    public abstract String getStatusDesc(); // todo return serverManager.getCurrentServerStatus();
 
 
 }

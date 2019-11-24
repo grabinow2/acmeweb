@@ -1,19 +1,19 @@
-package statusmgr;
+package com.acme.statusmgr;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
+import com.acme.servermgr.ServerManager;
+import com.acme.statusmgr.beans.ServerStatus;
+import com.acme.statusmgr.decorators.ExtensionsDetailDecorator;
+import com.acme.statusmgr.decorators.MemoryDetailDecorator;
+import com.acme.statusmgr.decorators.OperationsDetailDecorator;
 import org.springframework.web.bind.annotation.RequestMethod;
-import servermgr.ServerManager;
-import statusmgr.beans.ServerStatus;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import statusmgr.beans.StatusResponse;
-import statusmgr.decorators.BasicStatusReport;
-import statusmgr.decorators.ExtensionsDetailDecorator;
-import statusmgr.decorators.MemoryDetailDecorator;
-import statusmgr.decorators.OperationsDetailDecorator;
+import com.acme.statusmgr.beans.StatusResponse;
+import com.acme.statusmgr.decorators.BasicStatusReport;
 
 /**
  * Controller for all web/REST requests about the status of servers
@@ -47,12 +47,7 @@ public class StatusController {
     @RequestMapping(value = "/status", method = RequestMethod.GET)
     public StatusResponse statusRequestHandler(@RequestParam(value="name", defaultValue="Anonymous") String name)
     {
-        return new ServerStatus(counter.incrementAndGet(), String.format(template, name)) {
-            @Override
-            public String getStatusDesc() {
-                return ServerManager.getCurrentServerStatus();
-            }
-        };
+        return new BasicStatusReport(counter.incrementAndGet(), String.format(template, name));
     }
 
     /**
