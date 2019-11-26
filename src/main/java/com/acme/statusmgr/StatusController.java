@@ -17,18 +17,17 @@ import com.acme.statusmgr.decorators.BasicStatusReport;
 
 /**
  * Controller for all web/REST requests about the status of servers
- *
+ * <p>
  * For initial school project - just handles info about this server
  * Syntax for URLS:
- *    All start with /server
- *    /status  will give back status of server
- *    a param of 'name' specifies a requestor name to appear in response
- *
+ * All start with /server
+ * /status  will give back status of server
+ * a param of 'name' specifies a requestor name to appear in response
+ * <p>
  * Examples:
- *    http://localhost:8080/server/status
- *
- *    http://localhost:8080/server/status?name=Noach
- *
+ * http://localhost:8080/server/status
+ * <p>
+ * http://localhost:8080/server/status?name=Noach
  */
 
 @RestController
@@ -41,36 +40,36 @@ public class StatusController {
     /**
      * Handles server requests with "/status" in the URL. User can pass in their name by typing it in to the URL as in
      * the above example: http://localhost:8080/server/status?name=Noach
+     *
      * @param name the name of user requesting the status
      * @return a <code>ServerStatus</code> object that creates a greeting message in a browser
      */
     @RequestMapping(value = "/status", method = RequestMethod.GET)
-    public StatusResponse statusRequestHandler(@RequestParam(value="name", defaultValue="Anonymous") String name)
-    {
+    public StatusResponse statusRequestHandler(@RequestParam(value = "name", defaultValue = "Anonymous") String name) {
         return new BasicStatusReport(counter.incrementAndGet(), String.format(template, name));
     }
 
     /**
      * Handles a "/status/detailed" request. User must pass in a comma-delimited list of any amount of supported
      * detail requests in any order.
-     *
+     * <p>
      * Currently the list of supported detail requests includes:
      * <ul>
-     *     <li>operations - for a confirmation that the server is operational</li>
-     *     <li>memory - for a status update on the memory of the server</li>
-     *     <li>extensions - for a list of extensions that the server is using</li>
+     * <li>operations - for a confirmation that the server is operational</li>
+     * <li>memory - for a status update on the memory of the server</li>
+     * <li>extensions - for a list of extensions that the server is using</li>
      * </ul>
-     *
+     * <p>
      * Examples of valid URLs:
      * http://localhost:8080/server/status/detailed?details=operations
      * http://localhost:8080/server/status/detailed?details=operations,extensions,memory
-     *
+     * <p>
      * Additionally, the user can input their name into the URL to get similar feedback as "/status" requests.
      * Example of both in use:
      * http://localhost:8080/server/status/detailed?details=operations,extensions,memory&name=Noach
      *
      * @param details a comma-delimited list of strings parsed from the URL by Spring.
-     * @param name the name of user requesting status.
+     * @param name    the name of user requesting status.
      * @return a <code>ServerStatus</code> object that will publish a detailed status update in the browser.
      * @throws BadRequestException
      */
@@ -78,8 +77,7 @@ public class StatusController {
     public StatusResponse detailedRequestHandler(
             @RequestParam(value = "details") List<String> details,
             @RequestParam(value = "name", required = false, defaultValue = "Anonymous") String name)
-            throws BadRequestException
-    {
+            throws BadRequestException {
         if (details == null) //for failure atomicity
             throw new BadRequestException(
                     "\"Required List parameter 'details' is not present\",\"path\":\"/server/status/detailed\"");
@@ -92,8 +90,7 @@ public class StatusController {
             public String getStatusDesc() {
                 ServerStatus baseComp = new BasicStatusReport(longid, header);
 
-                for (String s : details)
-                {
+                for (String s : details) {
                     if (s.equalsIgnoreCase("operations"))
                         baseComp = new OperationsDetailDecorator(longid, header, baseComp);
 
@@ -104,11 +101,8 @@ public class StatusController {
                         baseComp = new ExtensionsDetailDecorator(longid, header, baseComp);
 
                     else
-                        try {
-                            throw new BadRequestException("Invalid details option: " + s);
-                        } catch (BadRequestException e) {
-                            e.printStackTrace();
-                        }
+                        throw new BadRequestException("Invalid details option: " + s);
+
                 }
 
                 this.statusDesc = baseComp.getStatusDesc();

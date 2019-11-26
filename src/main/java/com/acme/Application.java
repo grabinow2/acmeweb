@@ -12,24 +12,15 @@ import org.springframework.context.annotation.ImportResource;
  */
 
 @SpringBootApplication
-//@ComponentScan Not needed: SpringBootApplication AND at top of package hierarchy
 @ImportResource("classpath:applicationContext.xml")
 public class Application {
 
-    /**
-     * Maintain a reference to Spring's 'context' for our application.
-     */
     private static ApplicationContext applicationContext = null;
 
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
     }
 
-    /**
-     * Obtain lazy-int'ed reference to Spring's 'context' for our application.
-     *
-     * @return
-     */
     public static ApplicationContext getApplicationContext() {
         if (applicationContext == null) {
             applicationContext = new AnnotationConfigApplicationContext(Application.class);
