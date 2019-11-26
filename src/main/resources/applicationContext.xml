@@ -22,6 +22,9 @@
 
    <!-- <bean id="monitor"    class="com.acme.servermgr.SlowRealMonitor"></bean> -->
 
+    <!--For autowiring the decorator factory to use complex response -->
+
+    <bean id="factory"  class="com.acme.statusmgr.beans.factories.ComplexResponseFactory"></bean>
 
 
 

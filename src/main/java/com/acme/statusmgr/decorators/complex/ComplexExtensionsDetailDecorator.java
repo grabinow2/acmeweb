@@ -1,7 +1,7 @@
-package com.acme.statusmgr.decorators;
+package com.acme.statusmgr.decorators.complex;
 
 import servermgr.ServerManager;
-import statusmgr.beans.ServerStatus;
+import com.acme.statusmgr.beans.ServerStatus;
 
 /**
  * @author
@@ -10,11 +10,11 @@ import statusmgr.beans.ServerStatus;
  * Decorator for <code>ServerStatus.getStatusDesc()</code>that add the details of the extensions in use by the server
  * to the status report.
  */
-public class ExtensionsDetailDecorator extends ServerStatus {
+public class ComplexExtensionsDetailDecorator extends ServerStatus {
 
     private final ServerStatus baseComp;
 
-    public ExtensionsDetailDecorator(long id, String contentHeader, ServerStatus baseComp) {
+    public ComplexExtensionsDetailDecorator(long id, String contentHeader, ServerStatus baseComp) {
         super(id, contentHeader);
         this.baseComp = baseComp;
     }

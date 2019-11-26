@@ -1,7 +1,7 @@
-package statusmgr.decorators;
+package com.acme.statusmgr.decorators.complex;
 
 import servermgr.ServerManager;
-import statusmgr.beans.ServerStatus;
+import com.acme.statusmgr.beans.ServerStatus;
 
 /**
  * @author
@@ -9,9 +9,9 @@ import statusmgr.beans.ServerStatus;
  *
  * The basic behaviour of <code>ServerStatus.getStatusDesc()</code>.
  */
-public class BasicStatusReport extends ServerStatus {
+public class ComplexBasicStatusReport extends ServerStatus {
 
-    public BasicStatusReport(long id, String contentHeader) {
+    public ComplexBasicStatusReport(long id, String contentHeader) {
         super(id, contentHeader);
     }
 

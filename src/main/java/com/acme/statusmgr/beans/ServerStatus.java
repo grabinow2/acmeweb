@@ -1,6 +1,7 @@
-package statusmgr.beans;
+package com.acme.statusmgr.beans;
 
-import statusmgr.BadRequestException;
+import com.acme.statusmgr.beans.StatusResponse;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.util.List;
 
@@ -28,10 +29,12 @@ public abstract class ServerStatus implements StatusResponse {
         this.contentHeader = contentHeader;
     }
 
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     public long getId() {
         return id;
     }
 
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     public String getContentHeader() {
         return contentHeader;
     }
