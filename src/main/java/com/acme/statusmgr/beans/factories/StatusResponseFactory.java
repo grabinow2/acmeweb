@@ -8,6 +8,6 @@ import java.util.List;
 @Component
 public interface StatusResponseFactory {
 
-    public abstract ServerStatus getServerStatus(long id, String header, List<String> details);
+    ServerStatus getServerStatus(long id, String header, List<String> details);
 
 }

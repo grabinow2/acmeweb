@@ -46,11 +46,8 @@ public class ComplexResponseFactory implements StatusResponseFactory {
                 baseComp = new ComplexExtensionsDetailDecorator(id, header, baseComp);
 
             else
-                try {
-                    throw new BadRequestException("Invalid details option: " + s);
-                } catch (BadRequestException e) {
-                    e.printStackTrace();
-                }
+                throw new BadRequestException("Invalid details option: " + s);
+
         }
         return baseComp;
     }

@@ -1,6 +1,6 @@
 package com.acme.statusmgr.decorators.complex;
 
-import servermgr.ServerManager;
+import com.acme.servermgr.ServerManager;
 import com.acme.statusmgr.beans.ServerStatus;
 
 /**
@@ -21,6 +21,6 @@ public class ComplexOperationsDetailDecorator extends ServerStatus {
 
     @Override
     public String getStatusDesc() {
-        return baseComp.getStatusDesc() + ", and " + ServerManager.getIsOperatingNormally();
+        return baseComp.getStatusDesc() + ", and " + this.serverManager.getIsOperatingNormally();
     }
 }

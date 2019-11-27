@@ -5,15 +5,13 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import com.acme.statusmgr.beans.factories.SimpleResponseFactory;
 import com.acme.statusmgr.beans.factories.StatusResponseFactory;
+import com.acme.statusmgr.decorators.complex.ComplexBasicStatusReport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMethod;
-import servermgr.ServerManager;
-import com.acme.statusmgr.beans.ServerStatus;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.acme.statusmgr.beans.StatusResponse;
-import com.acme.statusmgr.decorators.BasicStatusReport;
 
 /**
  * Controller for all web/REST requests about the status of servers
@@ -34,8 +32,8 @@ import com.acme.statusmgr.decorators.BasicStatusReport;
 @RequestMapping("/server")
 public class StatusController {
 
-    protected static final String template = "Server Status requested by %s";
-    protected final AtomicLong counter = new AtomicLong();
+    private static final String template = "Server Status requested by %s";
+    private final AtomicLong counter = new AtomicLong();
 
     @Autowired
     StatusResponseFactory factory;
@@ -53,7 +51,7 @@ public class StatusController {
      */
     @RequestMapping(value = "/status", method = RequestMethod.GET)
     public StatusResponse statusRequestHandler(@RequestParam(value = "name", defaultValue = "Anonymous") String name) {
-        return new BasicStatusReport(counter.incrementAndGet(), String.format(template, name));
+        return new ComplexBasicStatusReport(counter.incrementAndGet(), String.format(template, name));
     }
 
     /**
@@ -111,7 +109,7 @@ public class StatusController {
 
         else if (levelOfDetail.equalsIgnoreCase("simple")) {
             factory = new SimpleResponseFactory();
-            return factory.getServerStatus(0, null, details);
+            return factory.getServerStatus(0, null, details); //I found this to be cleaner than overriding methods in the simple decorators
         }
         else {
             throw new BadRequestException("invalid levelofdetail param was " + levelOfDetail);

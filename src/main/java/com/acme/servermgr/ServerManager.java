@@ -32,7 +32,7 @@ public class ServerManager {
      *
      * @return String indicating if server is operating normally
      */
-    static public String getIsOperatingNormally() {
+    public String getIsOperatingNormally() {
         return ("is operating normally");
     }
 
@@ -41,14 +41,14 @@ public class ServerManager {
      *
      * @return a comma-delimited list of the extensions surrounded by '[]' as a String.
      */
-    static public String getExtensions() {
+    public String getExtensions() {
         return "[Hypervisor, Kubernetes, RAID-6]";
     }
 
     /**
      * @return a String message on the status of the server's memory
      */
-    static public String getMemory() {
+    public String getMemory() {
         return "memory is running low";
     }
 

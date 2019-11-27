@@ -13,6 +13,6 @@ public class SimpleOperationsDetailDecorator extends ServerStatus {
 
     @Override
     public String getStatusDesc() {
-        return (baseComp.getStatusDesc() + ", and " + servermgr.ServerManager.getIsOperatingNormally());
+        return (baseComp.getStatusDesc() + ", and " + this.serverManager.getIsOperatingNormally());
     }
 }

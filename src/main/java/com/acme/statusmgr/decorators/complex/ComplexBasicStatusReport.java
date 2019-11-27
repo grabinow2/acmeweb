@@ -1,6 +1,6 @@
 package com.acme.statusmgr.decorators.complex;
 
-import servermgr.ServerManager;
+import com.acme.servermgr.ServerManager;
 import com.acme.statusmgr.beans.ServerStatus;
 
 /**
@@ -17,6 +17,6 @@ public class ComplexBasicStatusReport extends ServerStatus {
 
     @Override
     public String getStatusDesc() {
-        return ServerManager.getCurrentServerStatus();
+        return this.serverManager.getCurrentServerStatus();
     }
 }

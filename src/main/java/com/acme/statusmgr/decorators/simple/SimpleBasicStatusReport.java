@@ -10,6 +10,6 @@ public class SimpleBasicStatusReport extends ServerStatus {
 
     @Override
     public String getStatusDesc() {
-        return servermgr.ServerManager.getCurrentServerStatus();
+        return this.serverManager.getCurrentServerStatus();
     }
 }

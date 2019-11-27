@@ -43,13 +43,9 @@ public class SimpleResponseFactory implements StatusResponseFactory {
             else if (s.equalsIgnoreCase("extensions"))
                 baseComp = new SimpleExtensionsDetailDecorator(id, header, baseComp);
 
-            else {
-                try {
-                    throw new BadRequestException("Invalid details option: " + s);
-                } catch (BadRequestException e) {
-                    e.printStackTrace();
-                }
-            }
+            else
+                throw new BadRequestException("Invalid details option: " + s);
+
         }
         return baseComp;
     }
