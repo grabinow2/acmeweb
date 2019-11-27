@@ -1,6 +1,6 @@
-package com.acme.statusmgr.decorators;
+package com.acme.statusmgr.decorators.complex;
 
-import com.acme.servermgr.ServerManager;
+import servermgr.ServerManager;
 import com.acme.statusmgr.beans.ServerStatus;
 
 /**
@@ -10,11 +10,11 @@ import com.acme.statusmgr.beans.ServerStatus;
  * Decorator for <code>ServerStatus.getStatusDesc()</code> that add the details of the server's operations to
  * the status report.
  */
-public class OperationsDetailDecorator extends ServerStatus {
+public class ComplexOperationsDetailDecorator extends ServerStatus {
 
     private final ServerStatus baseComp;
 
-    public OperationsDetailDecorator(long id, String contentHeader, ServerStatus baseComp) {
+    public ComplexOperationsDetailDecorator(long id, String contentHeader, ServerStatus baseComp) {
         super(id, contentHeader);
         this.baseComp = baseComp;
     }

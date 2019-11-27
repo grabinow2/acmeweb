@@ -1,6 +1,6 @@
-package com.acme.statusmgr.decorators;
+package com.acme.statusmgr.decorators.complex;
 
-import com.acme.servermgr.ServerManager;
+import servermgr.ServerManager;
 import com.acme.statusmgr.beans.ServerStatus;
 
 /**
@@ -10,11 +10,11 @@ import com.acme.statusmgr.beans.ServerStatus;
  * Decorator for <code>ServerStatus.getStatusDesc()</code> that add the details of the server's memory to the
  * status report.
  */
-public class MemoryDetailDecorator extends ServerStatus {
+public class ComplexMemoryDetailDecorator extends ServerStatus {
 
     private final ServerStatus baseComp;
 
-    public MemoryDetailDecorator(long id, String contentHeader, ServerStatus baseComp) {
+    public ComplexMemoryDetailDecorator(long id, String contentHeader, ServerStatus baseComp) {
         super(id, contentHeader);
         this.baseComp = baseComp;
     }

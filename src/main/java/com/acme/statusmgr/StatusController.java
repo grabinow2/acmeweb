@@ -3,12 +3,12 @@ package com.acme.statusmgr;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
-import com.acme.servermgr.ServerManager;
-import com.acme.statusmgr.beans.ServerStatus;
-import com.acme.statusmgr.decorators.ExtensionsDetailDecorator;
-import com.acme.statusmgr.decorators.MemoryDetailDecorator;
-import com.acme.statusmgr.decorators.OperationsDetailDecorator;
+import com.acme.statusmgr.beans.factories.SimpleResponseFactory;
+import com.acme.statusmgr.beans.factories.StatusResponseFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMethod;
+import servermgr.ServerManager;
+import com.acme.statusmgr.beans.ServerStatus;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -37,6 +37,13 @@ public class StatusController {
     protected static final String template = "Server Status requested by %s";
     protected final AtomicLong counter = new AtomicLong();
 
+    @Autowired
+    StatusResponseFactory factory;
+
+    public StatusController(StatusResponseFactory factory) {
+        this.factory = factory;
+    }
+
     /**
      * Handles server requests with "/status" in the URL. User can pass in their name by typing it in to the URL as in
      * the above example: http://localhost:8080/server/status?name=Noach
@@ -63,55 +70,51 @@ public class StatusController {
      * Examples of valid URLs:
      * http://localhost:8080/server/status/detailed?details=operations
      * http://localhost:8080/server/status/detailed?details=operations,extensions,memory
+     * </p>
+     *
      * <p>
      * Additionally, the user can input their name into the URL to get similar feedback as "/status" requests.
      * Example of both in use:
      * http://localhost:8080/server/status/detailed?details=operations,extensions,memory&name=Noach
+     * </p>
      *
-     * @param details a comma-delimited list of strings parsed from the URL by Spring.
-     * @param name    the name of user requesting status.
+     * <p>
+     * Additionally, the user can adjust level of detail that he will see by setting the levelofdetail parameter
+     * to either complex or simple. Setting it to simple will remove the header and id from the JSON string.
+     * Its default value is complex to include all the JSON properties.
+     * <p>
+     * Example:
+     * http://localhost:8080/server/status/detailed?details=operations,extensions,memory&levelofdetail=simple
+     * </p>
+     *
+     * @param details       a comma-delimited list of strings parsed from the URL by Spring.
+     * @param name          the name of user requesting status.
+     * @param levelOfDetail level of detail that the user wants to see.
      * @return a <code>ServerStatus</code> object that will publish a detailed status update in the browser.
      * @throws BadRequestException
      */
     @RequestMapping(value = "/status/detailed", method = RequestMethod.GET)
     public StatusResponse detailedRequestHandler(
             @RequestParam(value = "details") List<String> details,
-            @RequestParam(value = "name", required = false, defaultValue = "Anonymous") String name)
+            @RequestParam(value = "name", required = false, defaultValue = "Anonymous") String name,
+            @RequestParam(value = "levelofdetail", required = false, defaultValue = "complex") String levelOfDetail)
             throws BadRequestException {
-
-        if (details == null) //for failure atomicity
+        if (details == null) //here for failure atomicity
             throw new BadRequestException(
                     "\"Required List parameter 'details' is not present\",\"path\":\"/server/status/detailed\"");
 
         long id = counter.incrementAndGet();
         String header = String.format(template, name);
 
-        return new ServerStatus(id, header) {
-            @Override
-            public String getStatusDesc() {
-                ServerStatus baseComp = new BasicStatusReport(id, header);
+        if (levelOfDetail.equalsIgnoreCase("complex"))
+            return factory.getServerStatus(id, header, details);
 
-                for (String s : details) {
-                    if (s.equalsIgnoreCase("operations"))
-                        baseComp = new OperationsDetailDecorator(id, header, baseComp);
-
-                    else if (s.equalsIgnoreCase("memory"))
-                        baseComp = new MemoryDetailDecorator(id, header, baseComp);
-
-                    else if (s.equalsIgnoreCase("extensions"))
-                        baseComp = new ExtensionsDetailDecorator(id, header, baseComp);
-
-                    else
-                        throw new BadRequestException("Invalid details option: " + s);
-
-                }
-
-                this.statusDesc = baseComp.getStatusDesc();
-
-                return statusDesc;
-            }
-        };
-
+        else if (levelOfDetail.equalsIgnoreCase("simple")) {
+            factory = new SimpleResponseFactory();
+            return factory.getServerStatus(0, null, details);
+        }
+        else {
+            throw new BadRequestException("invalid levelofdetail param was " + levelOfDetail);
+        }
     }
-
 }

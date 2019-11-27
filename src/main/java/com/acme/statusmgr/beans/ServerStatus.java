@@ -1,5 +1,9 @@
 package com.acme.statusmgr.beans;
 
+import com.acme.statusmgr.beans.StatusResponse;
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+import java.util.List;
 import com.acme.Application;
 import com.acme.servermgr.ServerManager;
 
@@ -31,10 +35,12 @@ public abstract class ServerStatus implements StatusResponse {
         serverManager = (ServerManager) Application.getApplicationContext().getBean("serverManager");
     }
 
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     public long getId() {
         return id;
     }
 
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     public String getContentHeader() {
         return contentHeader;
     }
