@@ -39,7 +39,6 @@ public abstract class ServerStatus implements StatusResponse {
         return contentHeader;
     }
 
-    public abstract String getStatusDesc(); // todo return serverManager.getCurrentServerStatus();
-
+    public abstract String getStatusDesc();
 
 }

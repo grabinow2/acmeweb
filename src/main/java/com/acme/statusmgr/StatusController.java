@@ -78,27 +78,28 @@ public class StatusController {
             @RequestParam(value = "details") List<String> details,
             @RequestParam(value = "name", required = false, defaultValue = "Anonymous") String name)
             throws BadRequestException {
+
         if (details == null) //for failure atomicity
             throw new BadRequestException(
                     "\"Required List parameter 'details' is not present\",\"path\":\"/server/status/detailed\"");
 
-        long longid = counter.incrementAndGet();
+        long id = counter.incrementAndGet();
         String header = String.format(template, name);
 
-        return new ServerStatus(longid, header) {
+        return new ServerStatus(id, header) {
             @Override
             public String getStatusDesc() {
-                ServerStatus baseComp = new BasicStatusReport(longid, header);
+                ServerStatus baseComp = new BasicStatusReport(id, header);
 
                 for (String s : details) {
                     if (s.equalsIgnoreCase("operations"))
-                        baseComp = new OperationsDetailDecorator(longid, header, baseComp);
+                        baseComp = new OperationsDetailDecorator(id, header, baseComp);
 
                     else if (s.equalsIgnoreCase("memory"))
-                        baseComp = new MemoryDetailDecorator(longid, header, baseComp);
+                        baseComp = new MemoryDetailDecorator(id, header, baseComp);
 
                     else if (s.equalsIgnoreCase("extensions"))
-                        baseComp = new ExtensionsDetailDecorator(longid, header, baseComp);
+                        baseComp = new ExtensionsDetailDecorator(id, header, baseComp);
 
                     else
                         throw new BadRequestException("Invalid details option: " + s);
