@@ -1,7 +1,7 @@
 package com.acme.statusmgr.decorators;
 
-import servermgr.ServerManager;
-import statusmgr.beans.ServerStatus;
+import com.acme.servermgr.ServerManager;
+import com.acme.statusmgr.beans.ServerStatus;
 
 /**
  * @author
