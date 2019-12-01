@@ -3,6 +3,7 @@ package com.acme.statusmgr;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
+import com.acme.statusmgr.beans.DiskStatus;
 import com.acme.statusmgr.beans.factories.SimpleResponseFactory;
 import com.acme.statusmgr.beans.factories.StatusResponseFactory;
 import com.acme.statusmgr.decorators.complex.ComplexBasicStatusReport;
@@ -115,4 +116,23 @@ public class StatusController {
             throw new BadRequestException("invalid levelofdetail param was " + levelOfDetail);
         }
     }
+
+    /**
+     * Handles a "/disk/status" request to see the status of the disk of the server.
+     *
+     * User can pass their name in as in all other status requests.
+     * Example URL: http://localhost:8080/server/disk/status?name=Billy
+     *
+     * @param name  of user requesting status
+     * @return      a DiskStatus POJO that Spring will create JSON from
+     *
+     * @see DiskStatus
+     */
+    @RequestMapping(value = "/disk/status", method = RequestMethod.GET)
+    public StatusResponse diskStatusRequestHandler(
+            @RequestParam(value = "name", required = false, defaultValue = "Anonymous") String name )
+    {
+        return new DiskStatus(counter.incrementAndGet(), String.format(template, name));
+    }
+
 }
