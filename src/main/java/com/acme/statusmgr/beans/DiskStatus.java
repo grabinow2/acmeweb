@@ -16,7 +16,7 @@ public class DiskStatus implements StatusResponse {
     /**
      * The command to get some response from the disk on a Windows machine
      */
-    private static final String[] DISK_COMMAND = {"cmd", "/C", "Dir", "/S", "C:*.java"};
+    private static final String[] DISK_COMMAND = {"cmd", "/C", "Dir", "/S", "C:\\*.java"};
 
     /**
      * The Id of this request
