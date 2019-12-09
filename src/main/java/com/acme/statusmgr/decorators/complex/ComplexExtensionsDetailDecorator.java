@@ -1,13 +1,12 @@
 package com.acme.statusmgr.decorators.complex;
 
-import com.acme.servermgr.ServerManager;
 import com.acme.statusmgr.beans.ServerStatus;
 
 /**
  * @author
  * @version
  *
- * Decorator for <code>ServerStatus.getStatusDesc()</code>that add the details of the extensions in use by the server
+ * Decorator for <code>ServerStatus.obtainStatusDesc()</code>that add the details of the extensions in use by the server
  * to the status report.
  */
 public class ComplexExtensionsDetailDecorator extends ServerStatus {
@@ -20,7 +19,7 @@ public class ComplexExtensionsDetailDecorator extends ServerStatus {
     }
 
     @Override
-    public String getStatusDesc() {
-        return baseComp.getStatusDesc() + ", and is using these extensions - " + this.serverManager.getExtensions();
+    public String obtainStatusDesc() {
+        return baseComp.obtainStatusDesc() + ", and is using these extensions - " + this.serverManager.getExtensions();
     }
 }

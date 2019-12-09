@@ -17,7 +17,7 @@ public abstract class ServerStatus implements StatusResponse {
 
     protected long id;
     protected String contentHeader;
-    public String statusDesc;
+    private String statusDesc;
 
     protected ServerManager serverManager;
 
@@ -45,6 +45,14 @@ public abstract class ServerStatus implements StatusResponse {
         return contentHeader;
     }
 
-    public abstract String getStatusDesc();
+    public abstract String obtainStatusDesc();
 
+    @Override
+    public String getStatusDesc() {
+        return statusDesc;
+    }
+
+    public void setStatusDesc(String statusDesc) {
+        this.statusDesc = statusDesc;
+    }
 }

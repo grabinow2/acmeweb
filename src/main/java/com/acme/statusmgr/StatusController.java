@@ -7,12 +7,11 @@ import com.acme.statusmgr.beans.DiskStatus;
 import com.acme.statusmgr.beans.factories.SimpleResponseFactory;
 import com.acme.statusmgr.beans.factories.StatusResponseFactory;
 import com.acme.statusmgr.commands.BasicServerStatusCmd;
-import com.acme.statusmgr.decorators.complex.ComplexBasicStatusReport;
+import com.acme.statusmgr.commands.DetailedServerStatusCmd;
+import com.acme.statusmgr.commands.DiskStatusCommand;
 import com.acme.statusmgr.executors.SerialExecutor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMethod;
-import servermgr.ServerManager;
-import com.acme.statusmgr.beans.ServerStatus;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -40,12 +39,6 @@ public class StatusController {
     private static final String template = "Server Status requested by %s";
     private final AtomicLong counter = new AtomicLong();
 
-    @Autowired
-    StatusResponseFactory factory;
-
-    public StatusController(StatusResponseFactory factory) {
-        this.factory = factory;
-    }
 
     /**
      * Handles server requests with "/status" in the URL. User can pass in their name by typing it in to the URL as in
@@ -112,19 +105,15 @@ public class StatusController {
             throw new BadRequestException(
                     "\"Required List parameter 'details' is not present\",\"path\":\"/server/status/detailed\"");
 
-        long id = counter.incrementAndGet();
-        String header = String.format(template, name);
+        DetailedServerStatusCmd cmd = new DetailedServerStatusCmd(counter.incrementAndGet(), template, name,
+                details, levelOfDetail);
 
-        if (levelOfDetail.equalsIgnoreCase("complex"))
-            return factory.getServerStatus(id, header, details);
+        SerialExecutor executor = new SerialExecutor(cmd);
 
-        else if (levelOfDetail.equalsIgnoreCase("simple")) {
-            factory = new SimpleResponseFactory();
-            return factory.getServerStatus(id, header, details);
-        }
-        else {
-            throw new BadRequestException("invalid levelofdetail param was " + levelOfDetail);
-        }
+        executor.handleImmidiatly();
+
+        return cmd.getResults();
+
     }
 
     /**
@@ -142,7 +131,10 @@ public class StatusController {
     public StatusResponse diskStatusRequestHandler(
             @RequestParam(value = "name", required = false, defaultValue = "Anonymous") String name )
     {
-        return new DiskStatus(counter.incrementAndGet(), String.format(template, name));
+        DiskStatusCommand cmd = new DiskStatusCommand(counter.incrementAndGet(), template, name);
+        SerialExecutor executor = new SerialExecutor(cmd);
+        executor.handleImmidiatly();
+        return cmd.getResults();
     }
 
 }

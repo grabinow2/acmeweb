@@ -7,7 +7,7 @@ import com.acme.statusmgr.beans.ServerStatus;
  * @author
  * @version
  *
- * The basic behaviour of <code>ServerStatus.getStatusDesc()</code>.
+ * The basic behaviour of <code>ServerStatus.obtainStatusDesc()</code>.
  */
 public class ComplexBasicStatusReport extends ServerStatus {
 
@@ -16,7 +16,7 @@ public class ComplexBasicStatusReport extends ServerStatus {
     }
 
     @Override
-    public String getStatusDesc() {
+    public String obtainStatusDesc() {
         return this.serverManager.getCurrentServerStatus();
     }
 }

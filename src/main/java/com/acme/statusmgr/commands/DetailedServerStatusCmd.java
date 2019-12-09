@@ -1,6 +1,7 @@
 package com.acme.statusmgr.commands;
 
 import com.acme.statusmgr.BadRequestException;
+import com.acme.statusmgr.beans.ServerStatus;
 import com.acme.statusmgr.beans.StatusResponse;
 import com.acme.statusmgr.beans.factories.ComplexResponseFactory;
 import com.acme.statusmgr.beans.factories.SimpleResponseFactory;
@@ -11,7 +12,7 @@ import java.util.List;
 public class DetailedServerStatusCmd extends StatusCommand {
 
     private StatusResponseFactory factory;
-    private StatusResponse result;
+    private ServerStatus result;
 
     private List<String> details;
 
@@ -36,6 +37,8 @@ public class DetailedServerStatusCmd extends StatusCommand {
     @Override
     public void execute() {
         result = factory.getServerStatus(this.id, String.format(template, name), details);
+
+        result.setStatusDesc(result.obtainStatusDesc());
     }
 
     @Override
