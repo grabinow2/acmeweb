@@ -15,4 +15,15 @@ public class SimpleOperationsDetailDecorator extends ServerStatus {
     public String getStatusDesc() {
         return (baseComp.getStatusDesc() + ", and " + servermgr.ServerManager.getIsOperatingNormally());
     }
+
+
+    @Override
+    public String getContentHeader(){
+        return null;
+    }
+
+    @Override
+    public long getId(){
+        return 0;
+    }
 }

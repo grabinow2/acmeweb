@@ -12,4 +12,14 @@ public class SimpleBasicStatusReport extends ServerStatus {
     public String getStatusDesc() {
         return servermgr.ServerManager.getCurrentServerStatus();
     }
+
+    @Override
+    public String getContentHeader(){
+        return null;
+    }
+
+    @Override
+    public long getId(){
+        return 0;
+    }
 }

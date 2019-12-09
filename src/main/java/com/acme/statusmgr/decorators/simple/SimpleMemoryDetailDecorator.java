@@ -15,4 +15,15 @@ public class SimpleMemoryDetailDecorator extends ServerStatus {
     public String getStatusDesc() {
         return (baseComp.getStatusDesc() + ", and " + servermgr.ServerManager.getMemory());
     }
+
+
+    @Override
+    public String getContentHeader(){
+        return null;
+    }
+
+    @Override
+    public long getId(){
+        return 0;
+    }
 }
