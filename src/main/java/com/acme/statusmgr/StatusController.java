@@ -110,7 +110,7 @@ public class StatusController {
 
         else if (levelOfDetail.equalsIgnoreCase("simple")) {
             factory = new SimpleResponseFactory();
-            return factory.getServerStatus(0, null, details); //I found this to be cleaner than overriding methods in the simple decorators
+            return factory.getServerStatus(id, header, details);
         }
         else {
             throw new BadRequestException("invalid levelofdetail param was " + levelOfDetail);

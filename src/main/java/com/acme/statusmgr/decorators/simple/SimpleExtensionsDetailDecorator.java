@@ -16,4 +16,15 @@ public class SimpleExtensionsDetailDecorator extends ServerStatus {
         return (baseComp.getStatusDesc() + ", and is using these extensions" + this.serverManager.getExtensions());
     }
 
+
+    @Override
+    public String getContentHeader(){
+        return null;
+    }
+
+    @Override
+    public long getId(){
+        return 0;
+    }
+
 }

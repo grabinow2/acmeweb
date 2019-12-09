@@ -23,12 +23,7 @@ public class SimpleResponseFactory implements StatusResponseFactory {
 
         ServerStatus decoratedBaseComp = decorateBaseComp(baseComp);
 
-        return new ServerStatus(id, header) {
-            @Override
-            public String getStatusDesc() {
-                return decoratedBaseComp.getStatusDesc();
-            }
-        };
+        return decoratedBaseComp;
 
     }
 
