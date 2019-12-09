@@ -6,7 +6,9 @@ import java.util.concurrent.atomic.AtomicLong;
 import com.acme.statusmgr.beans.DiskStatus;
 import com.acme.statusmgr.beans.factories.SimpleResponseFactory;
 import com.acme.statusmgr.beans.factories.StatusResponseFactory;
+import com.acme.statusmgr.commands.BasicServerStatusCmd;
 import com.acme.statusmgr.decorators.complex.ComplexBasicStatusReport;
+import com.acme.statusmgr.executors.SerialExecutor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -52,7 +54,12 @@ public class StatusController {
      */
     @RequestMapping(value = "/status", method = RequestMethod.GET)
     public StatusResponse statusRequestHandler(@RequestParam(value = "name", defaultValue = "Anonymous") String name) {
-        return new ComplexBasicStatusReport(counter.incrementAndGet(), String.format(template, name));
+
+        BasicServerStatusCmd cmd = new BasicServerStatusCmd(counter.incrementAndGet(), template, name);
+        SerialExecutor exc = new SerialExecutor(cmd);
+        exc.handleImmidiatly();
+        return cmd.getResults();
+
     }
 
     /**
