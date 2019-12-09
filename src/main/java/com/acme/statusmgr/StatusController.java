@@ -11,6 +11,8 @@ import com.acme.statusmgr.decorators.complex.ComplexBasicStatusReport;
 import com.acme.statusmgr.executors.SerialExecutor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMethod;
+import servermgr.ServerManager;
+import com.acme.statusmgr.beans.ServerStatus;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -66,6 +68,7 @@ public class StatusController {
      * Handles a "/status/detailed" request. User must pass in a comma-delimited list of any amount of supported
      * detail requests in any order.
      * <p>
+     * <p>
      * Currently the list of supported detail requests includes:
      * <ul>
      * <li>operations - for a confirmation that the server is operational</li>
@@ -117,7 +120,7 @@ public class StatusController {
 
         else if (levelOfDetail.equalsIgnoreCase("simple")) {
             factory = new SimpleResponseFactory();
-            return factory.getServerStatus(0, null, details); //I found this to be cleaner than overriding methods in the simple decorators
+            return factory.getServerStatus(id, header, details);
         }
         else {
             throw new BadRequestException("invalid levelofdetail param was " + levelOfDetail);
