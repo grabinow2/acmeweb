@@ -6,7 +6,7 @@ import java.io.InputStreamReader;
 import java.util.stream.Collectors;
 
 /**
- * @author
+ * @author Gedalia Rabinowitz
  * @version
  *
  * A POJO that represents a DiskStatus and can be used to generate JSON for that status
@@ -14,23 +14,14 @@ import java.util.stream.Collectors;
 public class DiskStatus implements StatusResponse {
 
     /**
-     * The command to get some response from the disk on a Windows machine
+     * The command to get some response from the disk on a Windows machine.
+     * WARNING: This is a very expensive operation
      */
     private static final String[] DISK_COMMAND = {"cmd", "/C", "Dir", "/S", "C:\\*.java"};
 
-    /**
-     * The Id of this request
-     */
     private long id;
-    /**
-     * Details about the request (example: name of requester)
-     */
     private String contentHeader;
-    /**
-     * Output issued by OS regarding the command to get some status of the disk
-     */
     private String diskCommandOutput;
-
     private String statusDesc;
 
 
@@ -59,6 +50,10 @@ public class DiskStatus implements StatusResponse {
         return getDiskCommandOutput();
     }
 
+    /**
+     * Runs the DISK_COMMAND on this runtime.
+     * @return The String response of the command
+     */
     private String getDiskCommandOutput(){
 
         Runtime rt = Runtime.getRuntime();

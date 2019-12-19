@@ -4,13 +4,10 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
 import com.acme.statusmgr.beans.DiskStatus;
-import com.acme.statusmgr.beans.factories.SimpleResponseFactory;
-import com.acme.statusmgr.beans.factories.StatusResponseFactory;
 import com.acme.statusmgr.commands.BasicServerStatusCmd;
 import com.acme.statusmgr.commands.DetailedServerStatusCmd;
-import com.acme.statusmgr.commands.DiskStatusCommand;
 import com.acme.statusmgr.executors.SerialExecutor;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.acme.statusmgr.proxies.SecurityProxy;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -52,7 +49,7 @@ public class StatusController {
 
         BasicServerStatusCmd cmd = new BasicServerStatusCmd(counter.incrementAndGet(), template, name);
         SerialExecutor exc = new SerialExecutor(cmd);
-        exc.handleImmidiatly();
+        exc.handleImmediately();
         return cmd.getResults();
 
     }
@@ -110,7 +107,7 @@ public class StatusController {
 
         SerialExecutor executor = new SerialExecutor(cmd);
 
-        executor.handleImmidiatly();
+        executor.handleImmediately();
 
         return cmd.getResults();
 
@@ -131,10 +128,9 @@ public class StatusController {
     public StatusResponse diskStatusRequestHandler(
             @RequestParam(value = "name", required = false, defaultValue = "Anonymous") String name )
     {
-        DiskStatusCommand cmd = new DiskStatusCommand(counter.incrementAndGet(), template, name);
-        SerialExecutor executor = new SerialExecutor(cmd);
-        executor.handleImmidiatly();
-        return cmd.getResults();
+        SecurityProxy proxy = new SecurityProxy(counter.incrementAndGet(), template, name);
+
+        return proxy.getResults();
     }
 
 }
