@@ -31,6 +31,8 @@ public class DiskStatus implements StatusResponse {
      */
     private String diskCommandOutput;
 
+    private String statusDesc;
+
 
     /**
      * Construct a DiskStatus object.
@@ -53,8 +55,7 @@ public class DiskStatus implements StatusResponse {
         return contentHeader;
     }
 
-    @Override
-    public String getStatusDesc(){
+    public String obtainStatusDesc(){
         return getDiskCommandOutput();
     }
 
@@ -76,5 +77,12 @@ public class DiskStatus implements StatusResponse {
     }
 
 
+    @Override
+    public String getStatusDesc() {
+        return statusDesc;
+    }
 
+    public void setStatusDesc(String statusDesc) {
+        this.statusDesc = statusDesc;
+    }
 }

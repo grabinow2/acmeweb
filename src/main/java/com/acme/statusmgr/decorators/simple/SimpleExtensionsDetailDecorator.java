@@ -12,8 +12,8 @@ public class SimpleExtensionsDetailDecorator extends ServerStatus {
     }
 
     @Override
-    public String getStatusDesc() {
-        return (baseComp.getStatusDesc() + ", and is using these extensions" + this.serverManager.getExtensions());
+    public String obtainStatusDesc() {
+        return (baseComp.obtainStatusDesc() + ", and is using these extensions" + this.serverManager.getExtensions());
     }
 
 
