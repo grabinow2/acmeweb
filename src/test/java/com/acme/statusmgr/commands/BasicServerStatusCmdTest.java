@@ -4,8 +4,6 @@ import com.acme.statusmgr.beans.ServerStatus;
 import com.acme.statusmgr.executors.SerialExecutor;
 import org.junit.Test;
 
-import java.util.concurrent.atomic.AtomicLong;
-
 import static org.junit.Assert.*;
 
 public class BasicServerStatusCmdTest {
