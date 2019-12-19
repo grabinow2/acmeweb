@@ -3,7 +3,6 @@ package com.acme.statusmgr.proxies;
 import com.acme.statusmgr.BadRequestException;
 import com.acme.statusmgr.beans.StatusResponse;
 import com.acme.statusmgr.commands.DiskStatusCommand;
-import com.acme.statusmgr.executors.SerialExecutor;
 
 /**
  * @author Gedalia Rabinowitz
@@ -11,16 +10,12 @@ import com.acme.statusmgr.executors.SerialExecutor;
  *
  * A Proxy that checks input name for validity before running an expensive disk command
  */
-public class SecurityProxy {
-
-    private long id;
-    private String template;
-    private String name;
+public class SecurityProxy extends StatusResponseProxy {
 
     public SecurityProxy(long id, String template, String name) {
-        this.id = id;
-        this.template = template;
-        this.name = name;
+
+        super(id, template, name);
+
     }
 
     /**
@@ -35,9 +30,8 @@ public class SecurityProxy {
             throw new BadRequestException("Long-Running Disk Operation will not run " +
                     "unless the user identifies himself!");
 
-        DiskStatusCommand cmd = new DiskStatusCommand(id, template, name);
-        SerialExecutor executor = new SerialExecutor(cmd);
-        executor.handleImmediately();
-        return cmd.getResults();
+        QuickResponseProxy quickResponseProxy = new QuickResponseProxy(id, template, name);
+
+        return quickResponseProxy.getResults();
     }
 }
