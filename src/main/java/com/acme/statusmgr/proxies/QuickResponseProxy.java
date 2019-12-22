@@ -1,8 +1,9 @@
 package com.acme.statusmgr.proxies;
 
+import com.acme.statusmgr.ProcessingException;
+import com.acme.statusmgr.beans.DiskStatus;
 import com.acme.statusmgr.beans.StatusResponse;
 import com.acme.statusmgr.commands.DiskStatusCommand;
-import com.acme.statusmgr.executors.SerialExecutor;
 
 public class QuickResponseProxy extends StatusResponseProxy {
 
@@ -12,11 +13,19 @@ public class QuickResponseProxy extends StatusResponseProxy {
 
     public StatusResponse getResults(){
 
-        // todo logic to handle quick response
-
         DiskStatusCommand cmd = new DiskStatusCommand(id, template, name);
-        SerialExecutor executor = new SerialExecutor(cmd);
-        executor.handleImmediately();
-        return cmd.getResults();
+
+        if (((DiskStatus) cmd.getResults()).isStale())
+            //The type-cast is because DiskStatusCommand.getResults() is obligated by the ExecutableWebCommand
+            // interface to return a StatusResponse, while DiskStatus is the only one with an isStale() method
+        {
+            DiskCommandHandlerProxy proxy = new DiskCommandHandlerProxy(cmd);
+            proxy.runMultiThreaded();
+            throw new ProcessingException("Data is currently being processed. " +
+                    "Please wait 30 seconds and refresh the page");
+            //todo - maybe do other stuff besides just throw an error in case of stale data?...
+        }
+        else
+            return cmd.getResults();
     }
 }
