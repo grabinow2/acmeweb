@@ -15,9 +15,11 @@ public class QuickResponseProxy extends StatusResponseProxy {
 
         DiskStatusCommand cmd = new DiskStatusCommand(id, template, name);
 
-        if (((DiskStatus) cmd.getResults()).isStale())
-            //The type-cast is because DiskStatusCommand.getResults() is obligated by the ExecutableWebCommand
-            // interface to return a StatusResponse, while DiskStatus is the only one with an isStale() method
+        DiskStatus instance = (DiskStatus) cmd.getResults();
+        //The type-cast is because DiskStatusCommand.getResults() is obligated by the ExecutableWebCommand
+        // interface to return a StatusResponse, while DiskStatus is the only one with an isStale() method
+
+        if (instance.isStale() || instance.getStatusDesc() == null)
         {
             DiskCommandHandlerProxy proxy = new DiskCommandHandlerProxy(cmd);
             proxy.runMultiThreaded();

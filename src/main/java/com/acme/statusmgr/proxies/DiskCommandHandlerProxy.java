@@ -13,6 +13,9 @@ public class DiskCommandHandlerProxy {
         this.cmd = cmd;
     }
 
+    /**
+     * Executes the cmd in a separate thread.
+     */
     public void runMultiThreaded() {
 
         if (isThreadRunning){
@@ -22,9 +25,14 @@ public class DiskCommandHandlerProxy {
             isThreadRunning = true;
 
             Thread thread = new Thread(() -> {
+
                 SerialExecutor serialExecutor = new SerialExecutor(cmd);
                 serialExecutor.handleImmediately();
+
+                isThreadRunning = false;
             });
+
+            thread.start();
 
         }
 
