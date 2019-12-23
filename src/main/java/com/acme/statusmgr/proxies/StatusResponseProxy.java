@@ -1,5 +1,11 @@
 package com.acme.statusmgr.proxies;
 
+/**
+ * @author Gedalia Rabinowitz
+ * @version
+ *
+ * A simple abstract base to extract boilerplate for the proxies that directly handle id, template, and name fields.
+ */
 public abstract class StatusResponseProxy {
 
     protected final long id;

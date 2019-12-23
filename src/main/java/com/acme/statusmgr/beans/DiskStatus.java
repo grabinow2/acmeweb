@@ -29,18 +29,17 @@ public class DiskStatus implements StatusResponse {
     private String statusDesc;
     private long timeOfLastCommandOutput;
 
-
-    /**
-     * Construct a DiskStatus object.
-     *
-     * @param id                a numeric identifier/counter of which request this
-     * @param contentHeader     info about the request
-     */
     private DiskStatus(long id, String contentHeader){
         this.id = id;
         this.contentHeader = contentHeader;
     }
 
+    /**
+     * Returns the singleton instance of DiskStatus with id and contentHeader set to the passed in values.
+     * @param id a numeric identifier/counter of which request this
+     * @param contentHeader info about the request
+     * @return
+     */
     public static synchronized DiskStatus getInstance(long id, String contentHeader){
         if (INSTANCE == null){
             INSTANCE = new DiskStatus(id, contentHeader);
