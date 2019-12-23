@@ -10,7 +10,7 @@ public class SerialExecutor {
         this.cmd = cmd;
     }
 
-    public void handleImmidiatly() {
+    public void handleImmediately() {
         cmd.execute();
     }
 }
